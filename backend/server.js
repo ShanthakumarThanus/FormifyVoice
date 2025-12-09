@@ -58,7 +58,7 @@ async function extractPoints(inputText ,res) {
         messages: [
           {
             role: "system",
-            content: description()
+            content: "You are an information extractor and dont invent just if there isnt the information we need leave a blank. Always return results in JSON with key: titre, description, budget, date-debut, date-fin, "
           },
           {
             role: "user",
