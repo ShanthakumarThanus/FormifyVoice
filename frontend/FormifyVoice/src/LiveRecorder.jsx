@@ -40,18 +40,18 @@ export default function LiveRecorder({ onTranscription }) {
     chunks.current = [];
 
     const formData = new FormData();
-    formData.append("audio", blob);
+    formData.append("audio", blob,"recording.webm");
 
     try {
-      const response = await fetch("http://localhost:3000/transcribe-chunk", {
+      const response = await fetch("http://localhost:3000/transcribe", {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) return;
 
-      const text = await response.text();
-      onTranscription(text);
+      const text = await response.json();
+      onTranscription(text.data);
     } catch (error) {
       console.error("Error sending chunk:", error);
     }
