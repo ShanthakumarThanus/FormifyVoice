@@ -102,7 +102,11 @@ export default function App() {
 
         {/* COLONNE 3 : Le Formulaire */}
         <section className="card form-section">
+<<<<<<< Updated upstream
           <h3>Données Extraites</h3>
+=======
+          <h3>Données Structurées</h3>
+>>>>>>> Stashed changes
           <div className="form-wrapper">
             <ProjectForm data={formData} />
           </div>
@@ -111,5 +115,9 @@ export default function App() {
       </main>
     </div>
   );
+<<<<<<< Updated upstream
 }
 
+=======
+}
+>>>>>>> Stashed changes
