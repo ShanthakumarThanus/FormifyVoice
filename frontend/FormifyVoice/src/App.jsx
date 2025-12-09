@@ -42,7 +42,7 @@ export default function App() {
 
       <h3>Transcription live :</h3>
       <pre style={{
-        background: "#f5f5f5", padding: "10px", borderRadius: "5px", minHeight: "100px"
+        background: "#f5f5f5", padding: "10px", borderRadius: "5px", minHeight: "100px", color: "black"
       }}>
         {transcript || "Parlez pour commencer..."}
       </pre>
