@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-export default function LiveRecorder({ onTranscription, onRecordingComplete }) {
+export default function LiveRecorder({ onTranscription, onRecordingComplete, setFormdata }) {
   // --- États ---
   const [recording, setRecording] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -112,16 +112,32 @@ export default function LiveRecorder({ onTranscription, onRecordingComplete }) {
   };
 
   // --- Envoi Backend ---
-  const sendChunk = async () => {
+const sendChunk = async () => {
     if (chunks.current.length === 0) return;
+
     const blob = new Blob(chunks.current, { type: "audio/webm" });
-    chunks.current = []; // On vide le buffer d'envoi
-    
-    // ... (Code fetch identique à avant) ...
-    // Simulation pour l'exemple :
-    const mockText = " [texte détecté] "; 
-    onTranscription(mockText);
+    chunks.current = [];
+
+    const formData = new FormData();
+    formData.append("audio", blob,"recording.webm");
+
+    try {
+      const response = await fetch("http://localhost:3000/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) return;
+
+      const text = await response.json();
+      onTranscription(text.data);
+      setFormdata(text.data);
+    } catch (error) {
+      console.error("Error sending chunk:", error);
+    }
   };
+﻿
+
 
   // --- Dessin Canvas ---
   const drawWaveform = () => {

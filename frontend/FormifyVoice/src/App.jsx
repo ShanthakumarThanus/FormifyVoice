@@ -92,6 +92,8 @@ export default function App() {
              <LiveRecorder 
                 onTranscription={handleChunk} 
                 onRecordingComplete={handleRecordingComplete}
+                setFormdata={setFormData}
+
              />
           </div>
           

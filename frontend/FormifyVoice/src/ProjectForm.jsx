@@ -1,7 +1,7 @@
 export default function ProjectForm({ data }) {
   // On sécurise l'accès aux données
   const project = data || {};
-
+  console.log(data);
   return (
     <form className="project-form">
       
@@ -11,7 +11,7 @@ export default function ProjectForm({ data }) {
         <input
           type="text"
           placeholder="Nom du projet..."
-          value={project.titre || ""}
+          value={project?.titre !==null ? project.titre: ""}
           readOnly
         />
       </div>
