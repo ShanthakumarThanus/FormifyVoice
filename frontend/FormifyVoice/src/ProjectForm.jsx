@@ -44,7 +44,7 @@ export default function ProjectForm({ data }) {
           <label>Date de début</label>
           <input
             type="text"
-            value={project.date-debut || ""}
+            value={project.debut || ""}
             readOnly
           />
         </div>
@@ -52,7 +52,7 @@ export default function ProjectForm({ data }) {
           <label>Date de fin</label>
           <input
             type="text"
-            value={project.date-fin || ""}
+            value={project.fin || ""}
             readOnly
           />
         </div>
