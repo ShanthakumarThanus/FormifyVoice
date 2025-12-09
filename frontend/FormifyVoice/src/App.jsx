@@ -9,7 +9,7 @@ export default function App() {
   const [recordings, setRecordings] = useState([]);
 
   const handleChunk = (chunkText) => {
-    setTranscript((prev) => prev + " " + chunkText);
+    setTranscript(chunkText);
   };
 
   const handleRecordingComplete = (newRecording) => {

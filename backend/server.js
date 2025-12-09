@@ -44,7 +44,7 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
 
     text = text + response.data.text;
     //res.status(200).send(response.data);
-    extractPoints(response.data.text, res);
+    extractPoints(text? text : response.data.text, res);
   } catch (err) {
     console.error("Error:", err.response?.data || err.message);
     res.status(500).send("Error transcribing audio");
@@ -90,12 +90,12 @@ async function extractPoints(inputText ,res) {
 }
 
 function description() {
-  return `Tu es un assistant chargé d’extraire des informations structurées en français.
+  return `Tu es un assistant chargé d’extraire des informations structurées.Il faut que tu comprennes le texte fourni par l’utilisateur et que tu en extraies les points clés selon les règles ci-dessous et comprendre le contexte du paragraphe pas seulement d'un mot ou deux.
 
 ⚠️ Sortie strictement en JSON VALIDE — aucun texte avant ou après. Pas de Markdown. Pas d’explication. Pas de phrase supplémentaire. Si tu hésites, renvoie null.
 
 ⚠️ IMPORTANT — NE DONNE JAMAIS UNE DATE ANTÉRIEURE À AUJOURD’HUI.
-Si une interprétation mène à une date passée, ajuste-la automatiquement à aujourd’hui.
+les textes peuvent etre imprecis de ce que l'utilisateur veut donc faut enticiper et donner la meilleure reponse possible selon le contexte.
 
 --------------------------------------
 🎯 RÈGLES D’EXTRACTION
