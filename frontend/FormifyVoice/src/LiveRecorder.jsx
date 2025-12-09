@@ -66,7 +66,7 @@ export default function LiveRecorder({ onTranscription, onRecordingComplete, set
           mediaRecorderRef.current.stop();
           mediaRecorderRef.current.start();
         }
-      }, 3000);
+      }, 5000);
 
     } catch (error) {
       console.error("Erreur micro:", error);
@@ -171,8 +171,8 @@ export default function LiveRecorder({ onTranscription, onRecordingComplete, set
 
       // Call the transcription handler with a readable string (keep existing behavior)
       if (onTranscription) {
-        if (typeof payload.data === "string") onTranscription(payload.data);
-        else onTranscription(JSON.stringify(payload.data));
+        if (typeof payload.data === "string") onTranscription(payload.input);
+        else onTranscription(JSON.stringify(payload.input));
       }
 
       // Update the form data in the parent (App)

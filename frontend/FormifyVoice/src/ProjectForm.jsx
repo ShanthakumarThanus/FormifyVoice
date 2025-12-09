@@ -59,7 +59,7 @@ export default function ProjectForm({ data }) {
       </div>
 
       {/* 5. Liste des Fonctionnalités */}
-      <div className="form-group">
+      {/* <div className="form-group">
         <label>Fonctionnalités identifiées</label>
         <div className="tags-container">
           {project.fonctionnalites && project.fonctionnalites.length > 0 ? (
@@ -72,7 +72,7 @@ export default function ProjectForm({ data }) {
             <span className="no-data">En attente de détection...</span>
           )}
         </div>
-      </div>
+      </div> */}
 
     </form>
   );
