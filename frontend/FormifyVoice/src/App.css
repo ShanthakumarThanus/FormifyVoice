@@ -15,42 +15,56 @@
   --shadow-soft: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.05);
 }
 
+/* --- Variables & Palette --- */
+/* (Garde ton :root tel quel, il est très bien) */
+
 * { box-sizing: border-box; }
 
-/* Correction du centrage de la page */
-html, body {
-  height: 100%; /* Important pour le centrage vertical si besoin */
+/* Correction du centrage et du background */
+html {
+  /* On remplace height: 100% par min-height pour permettre l'extension */
+  min-height: 100%;
   margin: 0;
 }
 
 body {
+  margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
+  
+  /* --- BACKGROUND --- */
   background-color: var(--bg-color);
   background-image: 
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.10) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.10) 0px, transparent 50%);
+  
+  /* C'est ICI la correction magique pour le scroll : */
+  background-attachment: fixed; /* Le fond reste fixe quand on scroll */
+  background-size: cover;       /* Couvre toute la zone */
+  
   color: var(--text-main);
   
   /* Flexbox pour centrer le container principal */
   display: flex;
   flex-direction: column;
-  align-items: center;     /* Centre horizontalement */
+  align-items: center;
   padding: 2rem 1rem;
+  
+  /* S'assure que le body fait au moins la hauteur de l'écran */
   min-height: 100vh;
 }
 
 /* --- Layout Principal Centré --- */
 .app-container {
-  width: 100%;             /* Force à prendre toute la largeur disponible */
-  max-width: 1400px;       /* ...jusqu'à 1400px max */
-  margin: 0 auto;          /* Sécurité supplémentaire pour le centrage */
+  width: 100%;
+  max-width: 2000px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
 
 .app-header {
   margin-bottom: 3rem;
-  text-align: center;      /* Centre le texte du titre */
+  text-align: center;
   width: 100%;
 }
 
@@ -59,6 +73,7 @@ body {
   font-size: 2.5rem; 
   background: var(--primary-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   font-weight: 800;
@@ -72,27 +87,27 @@ body {
 /* --- GRILLE 3 COLONNES --- */
 .main-grid {
   display: grid;
-  grid-template-columns: 320px 1fr 1fr; /* Sidebar un peu plus large */
+  grid-template-columns: 320px 1fr 1fr;
   gap: 2rem;
-  width: 100%;             /* S'assure que la grille remplit le container */
+  width: 100%;
   align-items: start;
 }
 
 /* Responsive Tablette */
 @media (max-width: 1100px) {
   .main-grid {
-    grid-template-columns: 1fr 1fr; /* 2 Colonnes */
+    grid-template-columns: 1fr 1fr;
   }
   .history-section {
-    grid-column: span 2; /* L'historique prend toute la largeur en haut ou en bas */
-    order: 3; /* On le met à la fin sur tablette si on veut, ou enlève cette ligne pour le garder en premier */
+    grid-column: span 2;
+    order: 3;
   }
 }
 
 /* Responsive Mobile */
 @media (max-width: 768px) {
   .main-grid {
-    grid-template-columns: 1fr; /* 1 Colonne */
+    grid-template-columns: 1fr;
   }
   .history-section { grid-column: span 1; order: 3;}
 }
@@ -129,7 +144,7 @@ body {
   font-weight: 700;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Espace entre le titre et les icônes si besoin */
+  justify-content: space-between;
 }
 
 /* --- Colonne 1 : Historique --- */
@@ -142,21 +157,24 @@ body {
   padding-right: 5px;
 }
 
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
 .history-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 1rem;
   transition: all 0.2s ease;
-  position: relative; /* Pour positionner des éléments si besoin */
+  position: relative;
 }
 
 .history-item:hover {
+  transform: translateY(-2px);
   border-color: #94a3b8;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-/* Header de l'item : Info à gauche, Poubelle à droite */
 .history-header-row {
   display: flex;
   justify-content: space-between;
@@ -172,7 +190,6 @@ body {
   font-weight: 600;
 }
 
-/* Style du bouton supprimer */
 .delete-btn {
   background: transparent;
   border: none;
@@ -185,46 +202,13 @@ body {
 }
 
 .delete-btn:hover {
-  background-color: #fee2e2; /* Fond rouge très pâle */
+  background-color: #fee2e2;
   transform: scale(1.1);
   opacity: 1;
 }
 
 .delete-btn:active {
   transform: scale(0.95);
-}
-
-.mini-player {
-  width: 100%;
-  height: 32px;
-  border-radius: 8px;
-}
-
-/* Scrollbar fine pour l'historique */
-.history-list::-webkit-scrollbar { width: 6px; }
-.history-list::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
-
-.history-item {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1rem;
-  transition: all 0.2s ease;
-}
-
-.history-item:hover {
-  transform: translateY(-2px);
-  border-color: #94a3b8;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.history-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 0.8rem;
-  font-weight: 600;
 }
 
 .mini-player {
@@ -260,7 +244,39 @@ body {
   line-height: 1.6;
 }
 
+/* --- Colonne 3 : Formulaire (MIS À JOUR) --- */
+
 /* --- Colonne 3 : Formulaire --- */
+
+/* C'est ici qu'on gère le scroll */
+.form-wrapper {
+  width: 100%;
+  /* Ces 3 lignes activent le scroll interne : */
+  flex: 1;            /* Prend tout l'espace restant sous le titre h3 */
+  overflow-y: auto;   /* Active le scroll vertical si le contenu dépasse */
+  min-height: 0;      /* Indispensable pour que le scroll fonctionne dans un flex item */
+  
+  /* Un peu d'espace pour que le texte ne colle pas à la scrollbar */
+  padding-right: 8px; 
+  padding-bottom: 10px;
+}
+
+/* On stylise la scrollbar pour qu'elle soit jolie (comme l'historique) */
+.form-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+.form-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.form-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+.form-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+/* Le reste du style des inputs reste le même... */
 .form-wrapper label {
   font-size: 0.9rem;
   font-weight: 600;
@@ -270,21 +286,93 @@ body {
   margin-top: 1rem;
 }
 
-.form-wrapper input, .form-wrapper textarea, .form-wrapper select {
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pour mettre les dates sur la même ligne */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.project-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Styles des Inputs et Textarea */
+.project-form input,
+.project-form textarea,
+.project-form select {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 1rem;
   background-color: #f8fafc;
-  transition: border-color 0.2s, background-color 0.2s;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: all 0.2s;
 }
 
-.form-wrapper input:focus, .form-wrapper textarea:focus {
+.project-form input:focus, 
+.project-form textarea:focus {
   outline: none;
   background-color: #fff;
-  border-color: #6366f1;
+  border-color: #6366f1; /* Indigo */
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* --- Styles des Tags (Fonctionnalités) --- */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  min-height: 50px;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.feature-tag {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); /* Dégradé Violet */
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.2s;
+}
+
+.feature-tag:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.no-data {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-left: 0.5rem;
 }
 
 /* --- Composants du Recorder --- */

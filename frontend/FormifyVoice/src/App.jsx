@@ -102,7 +102,7 @@ export default function App() {
 
         {/* COLONNE 3 : Le Formulaire */}
         <section className="card form-section">
-          <h3>Données Structurées</h3>
+          <h3>Données Extraites</h3>
           <div className="form-wrapper">
             <ProjectForm data={formData} />
           </div>
