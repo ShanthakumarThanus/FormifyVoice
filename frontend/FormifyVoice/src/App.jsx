@@ -38,11 +38,11 @@ export default function App() {
 
   useEffect(() => {
     if (!transcript) return;
-    const id = setTimeout(async () => {
-      const json = await extractFieldsFromText(transcript);
-      setFormData(json);
-    }, 5000);
-    return () => clearTimeout(id);
+    // const id = setTimeout(async () => {
+    //   const json = await extractFieldsFromText(transcript);
+    //   setFormData(json);
+    // }, 5000);
+    // return () => clearTimeout(id);
   }, [transcript]);
 
   return (

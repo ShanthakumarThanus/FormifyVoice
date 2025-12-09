@@ -112,14 +112,14 @@ export default function LiveRecorder({ onTranscription, onRecordingComplete, set
   };
 
   // --- Envoi Backend ---
-const sendChunk = async () => {
+  const sendChunk = async () => {
     if (chunks.current.length === 0) return;
 
     const blob = new Blob(chunks.current, { type: "audio/webm" });
     chunks.current = [];
 
     const formData = new FormData();
-    formData.append("audio", blob,"recording.webm");
+    formData.append("audio", blob, "recording.webm");
 
     try {
       const response = await fetch("http://localhost:3000/transcribe", {
@@ -129,9 +129,66 @@ const sendChunk = async () => {
 
       if (!response.ok) return;
 
-      const text = await response.json();
-      onTranscription(text.data);
-      setFormdata(text.data);
+      const payload = await response.json();
+
+      // payload.data may be a JSON string or an object depending on the backend
+      let extracted = payload.data;
+
+      if (typeof extracted === "string") {
+        // Try to find JSON inside string (models sometimes return code blocks or extra text)
+        const firstBrace = extracted.indexOf("{");
+        const lastBrace = extracted.lastIndexOf("}");
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          const jsonStr = extracted.slice(firstBrace, lastBrace + 1);
+          try {
+            extracted = JSON.parse(jsonStr);
+          } catch (e) {
+            // keep original string if parse fails
+          }
+        }
+      }
+
+      // Normalize mapping to the ProjectForm shape
+      const mapped = {};
+      if (extracted && typeof extracted === "object") {
+        mapped.titre = extracted.titre ?? extracted.title ?? null;
+        mapped.description = extracted.description ?? extracted.desc ?? null;
+        // budget: try to cast to number if possible
+        if (extracted.budget != null) {
+          const num = Number(String(extracted.budget).replace(/[^0-9.-]+/g, ""));
+          mapped.budget = Number.isFinite(num) ? num : null;
+        } else {
+          mapped.budget = null;
+        }
+
+        // dates: support several key names (date-debut, date_debut, debut)
+        mapped.debut = extracted["date-debut"] ?? extracted["date_debut"] ?? extracted.debut ?? null;
+        mapped.fin = extracted["date-fin"] ?? extracted["date_fin"] ?? extracted.fin ?? null;
+
+        // fonctionnalités / features
+        mapped.fonctionnalites = extracted.fonctionnalites ?? extracted.features ?? null;
+      }
+
+      // Call the transcription handler with a readable string (keep existing behavior)
+      if (onTranscription) {
+        if (typeof payload.data === "string") onTranscription(payload.data);
+        else onTranscription(JSON.stringify(payload.data));
+      }
+
+      // Update the form data in the parent (App)
+      if (setFormdata) {
+        setFormdata((prev = {}) => {
+          const next = { ...prev };
+          Object.keys(mapped).forEach((k) => {
+            const v = mapped[k];
+            // Only overwrite when value is not null/undefined/empty string
+            if (v !== null && v !== undefined && !(typeof v === "string" && v.trim() === "")) {
+              next[k] = v;
+            }
+          });
+          return next;
+        });
+      }
     } catch (error) {
       console.error("Error sending chunk:", error);
     }

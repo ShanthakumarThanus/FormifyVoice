@@ -11,7 +11,7 @@ export default function ProjectForm({ data }) {
         <input
           type="text"
           placeholder="Nom du projet..."
-          value={project?.titre !==null ? project.titre: ""}
+          value={project?.titre ?? ""}
           readOnly
         />
       </div>
@@ -21,7 +21,7 @@ export default function ProjectForm({ data }) {
         <label>Description</label>
         <textarea
           placeholder="Description du projet..."
-          value={project.description || ""}
+          value={project.description ?? ""}
           rows={4}
           readOnly
         />
@@ -33,7 +33,7 @@ export default function ProjectForm({ data }) {
         <input
           type="number"
           placeholder="0"
-          value={project.budget || ""}
+          value={project.budget ?? ""}
           readOnly
         />
       </div>
@@ -44,7 +44,7 @@ export default function ProjectForm({ data }) {
           <label>Date de début</label>
           <input
             type="text"
-            value={project.debut || ""}
+            value={project.debut ?? ""}
             readOnly
           />
         </div>
@@ -52,7 +52,7 @@ export default function ProjectForm({ data }) {
           <label>Date de fin</label>
           <input
             type="text"
-            value={project.fin || ""}
+            value={project.fin ?? ""}
             readOnly
           />
         </div>
