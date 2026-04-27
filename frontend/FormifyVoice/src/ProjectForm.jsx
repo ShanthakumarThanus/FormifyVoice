@@ -1,48 +1,78 @@
 export default function ProjectForm({ data }) {
+  // On sécurise l'accès aux données
+  const project = data || {};
+  console.log(data);
   return (
-    <form style={{ display: "grid", gap: "10px", maxWidth: "400px", marginTop: "20px" }}>
+    <form className="project-form">
+      
+      {/* 1. Titre */}
+      <div className="form-group">
+        <label>Titre du projet</label>
+        <input
+          type="text"
+          placeholder="Nom du projet..."
+          value={project?.titre ?? ""}
+          readOnly
+        />
+      </div>
 
-      <input
-        type="text"
-        placeholder="Nom du projet"
-        value={data?.nom || ""}
-        readOnly
-      />
+      {/* 2. Description */}
+      <div className="form-group">
+        <label>Description</label>
+        <textarea
+          placeholder="Description du projet..."
+          value={project.description ?? ""}
+          rows={4}
+          readOnly
+        />
+      </div>
 
-      <input
-        type="date"
-        placeholder="Date de début"
-        value={data?.date_debut || ""}
-        readOnly
-      />
+      {/* 3. Budget */}
+      <div className="form-group">
+        <label>Budget (€)</label>
+        <input
+          type="number"
+          placeholder="0"
+          value={project.budget ?? ""}
+          readOnly
+        />
+      </div>
 
-      <input
-        type="date"
-        placeholder="Date de fin"
-        value={data?.date_fin || ""}
-        readOnly
-      />
+      {/* 4. Dates */}
+      <div className="form-row">
+        <div className="form-group">
+          <label>Date de début</label>
+          <input
+            type="text"
+            value={project.debut ?? ""}
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <label>Date de fin</label>
+          <input
+            type="text"
+            value={project.fin ?? ""}
+            readOnly
+          />
+        </div>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Client"
-        value={data?.client || ""}
-        readOnly
-      />
-
-      {/* <input
-        type="text"
-        placeholder="Urgence"
-        value={data?.urgence || ""}
-        readOnly
-      /> */}
-
-      <textarea
-        placeholder="Objectif du projet"
-        value={data?.objectif || ""}
-        rows={3}
-        readOnly
-      />
+      {/* 5. Liste des Fonctionnalités */}
+      {/* <div className="form-group">
+        <label>Fonctionnalités identifiées</label>
+        <div className="tags-container">
+          {project.fonctionnalites && project.fonctionnalites.length > 0 ? (
+            project.fonctionnalites.map((feature, index) => (
+              <span key={index} className="feature-tag">
+                ✨ {feature}
+              </span>
+            ))
+          ) : (
+            <span className="no-data">En attente de détection...</span>
+          )}
+        </div>
+      </div> */}
 
     </form>
   );

@@ -10,6 +10,8 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 
+var text= "";
+
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
@@ -39,8 +41,10 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
         },
       }
     );
+
+    text = text + response.data.text;
     //res.status(200).send(response.data);
-    extractPoints(response.data.text, res);
+    extractPoints(text? text : response.data.text, res);
   } catch (err) {
     console.error("Error:", err.response?.data || err.message);
     res.status(500).send("Error transcribing audio");
@@ -50,14 +54,16 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
 
 
 async function extractPoints(inputText ,res) {
+  console.log(inputText);
   try {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4.1", // or gpt-4.1-mini
+        model: "gpt-5.1", // or gpt-4.1-mini
         messages: [
           {
             role: "system",
+            // content: "You are an information extractor and dont invent just if there isnt the information we need leave a blank. Always return results in JSON with key: titre, description, budget, date-debut, date-fin, "
             content: description()
           },
           {
@@ -77,19 +83,19 @@ async function extractPoints(inputText ,res) {
 
     console.log("Extracted Points:\n");
     console.log(response.data.choices[0].message.content);
-    res.status(200).send({"success" : true, "data": response.data.choices[0].message.content})
+    res.status(200).send({"success" : true, "data": response.data.choices[0].message.content, "input": inputText});
   } catch (err) {
     console.error("Error:", err.response?.data || err.message);
   }
 }
 
 function description() {
-  return `Tu es un assistant chargé d’extraire des informations structurées en français.
+  return `Tu es un assistant chargé d’extraire des informations structurées.Il faut que tu comprennes le texte fourni par l’utilisateur et que tu en extraies les points clés selon les règles ci-dessous et comprendre le contexte du paragraphe pas seulement d'un mot ou deux.
 
 ⚠️ Sortie strictement en JSON VALIDE — aucun texte avant ou après. Pas de Markdown. Pas d’explication. Pas de phrase supplémentaire. Si tu hésites, renvoie null.
 
 ⚠️ IMPORTANT — NE DONNE JAMAIS UNE DATE ANTÉRIEURE À AUJOURD’HUI.
-Si une interprétation mène à une date passée, ajuste-la automatiquement à aujourd’hui.
+les textes peuvent etre imprecis de ce que l'utilisateur veut donc faut enticiper et donner la meilleure reponse possible selon le contexte.
 
 --------------------------------------
 🎯 RÈGLES D’EXTRACTION
@@ -121,7 +127,6 @@ Si une interprétation mène à une date passée, ajuste-la automatiquement à a
        - "début 2026" → 2026-01-01
        - "ASAP" / "au plus vite" / "dès que possible" → date du jour = 2025-12-09
        - "dans 3 mois" / "commencer dans 2 mois" → date du jour + X mois
-   - Si une interprétation donne une date passée, remplace par aujourd’hui.
    - Si impossible d'inférer → null.
 
 5. "date-fin" (date ISO yyyy-mm-dd ou null)
@@ -132,13 +137,12 @@ Si une interprétation mène à une date passée, ajuste-la automatiquement à a
        - "octobre 2026" → 2026-10-01
        - "priorité octobre, sinon novembre" → octobre = 2026-10-01
        - "release sous 3 mois" / "deadline dans 4 mois" → date du jour + X mois
-   - JAMAIS une date passée.
-   - Si la date estimée est antérieure au "date-debut", ajuste-la au minimum requise (ex : début + 1 jour).
-   - Si ambigu → null.
+    - Si ambigu → null.
 
 --------------------------------------
 
-Commence la réponse par '{' et termine par '}' sans rien d’autre.`
+Commence la réponse par '{' et termine par '}' sans rien d’autre.
+Peut tu utiliser qu'une seule langue, la langue que tu as détectée en premier.`
 }
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));

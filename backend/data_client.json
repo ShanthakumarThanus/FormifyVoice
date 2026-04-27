@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "source": "audio_transcription",
+    "confidence_score": 0.98,
+    "timestamp": "2023-10-27T10:30:00Z",
+    "transcripteur": "ChatGPT Speech-to-Text v3",
+    "langue_detectee": "fr-FR",
+    "qualite_audio": "bonne",
+    "duree_estimee_message": "1min32s"
+  },
+
+  "client": {
+    "nom": "Jean Dupont",
+    "contact": "jean.dupont@email.com",
+    "telephone": "+33 6 45 32 10 89",
+    "poste": "Responsable Innovation",
+    "entreprise": "FastFood Express",
+    "secteur_activite": "Restauration rapide",
+    "nbr_employes": 87,
+    "adresse_siege": "12 Rue de la Gare, 75010 Paris",
+    "ton_client": "Urgent et professionnel"
+  },
+
+  "projet": {
+    "type": "Application Mobile",
+    "nom_projet_interne": "LunchFast",
+    "domaine": "Livraison de nourriture",
+    "objectif_principal": "Permettre aux employés de bureau de commander leur déjeuner rapidement",
+    "description_detaillee": "Une application ergonomique permettant de localiser les restaurants partenaires, de commander en quelques clics et de suivre la livraison en temps réel.",
+    "public_cible": ["employés de bureau", "travailleurs en coworking", "startups"],
+    "plateformes_voulues": ["iOS", "Android"],
+    "besoin_marketing_annexe": "Possibilité d'envoyer des notifications push pour les promos du midi"
+  },
+
+  "fonctionnalites_cles": [
+    "Système de connexion utilisateur (Email/Google)",
+    "Géolocalisation des restaurants",
+    "Paiement via Stripe",
+    "Suivi de commande en temps réel",
+    "Gestion du panier",
+    "Interface restaurateur (acceptation/refus des commandes)",
+    "Historique des commandes",
+    "Notifications push"
+  ],
+
+  "fonctionnalites_optionnelles": [
+    "Programme de fidélité",
+    "Codes promo",
+    "Chat livreur-client",
+    "Mode sombre",
+    "Traduction multi-langue",
+    "Suggestions personnalisées basées sur l'historique"
+  ],
+
+  "contraintes": {
+    "budget_estime": 15000,
+    "devise": "EUR",
+    "deadline": "3 mois",
+    "stack_tech_preferee": ["React Native", "Node.js"],
+    "heures_reunions_prevues": 12,
+    "documentations_existantes": false,
+    "restrictions_legales": ["RGPD"],
+    "besoin_hebergement": "Oui - serveur cloud sécurisé",
+    "volume_commande_estime_jour": 350
+  },
+
+  "design_ux_ui": {
+    "style_prefere": "Simple, moderne, couleurs chaudes",
+    "maquettes_fournies": false,
+    "inspiration": ["Uber Eats", "Frichti"],
+    "charte_graphique_existante": false
+  },
+
+  "informations_additionnelles": {
+    "concurrents": ["Uber Eats", "Deliveroo"],
+    "risques_identifies": [
+      "Problèmes de logistique avec les restaurants",
+      "Temps de livraison non maîtrisés",
+      "Dépendance au réseau internet"
+    ],
+    "fuseau_horaire_client": "Europe/Paris",
+    "preference_communication": "Email + réunions Google Meet",
+    "documents_attendus_par_le_client": [
+      "Planning du développement",
+      "Wireframes",
+      "Maquettes UI",
+      "Rapports d’avancement hebdomadaires"
+    ],
+    "notes_diverses": "Le client souhaite commencer le développement immédiatement."
+  }
+}

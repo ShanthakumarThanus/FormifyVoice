@@ -1,42 +1,444 @@
-#root {
-  max-width: 1280px;
+/* --- Variables & Palette --- */
+:root {
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --danger-gradient: linear-gradient(135deg, #ef4444 0%, #f43f5e 100%);
+  
+  --bg-color: #f0f4f8;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  
+  --shadow-soft: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.05);
+}
+
+/* --- Variables & Palette --- */
+/* (Garde ton :root tel quel, il est très bien) */
+
+* { box-sizing: border-box; }
+
+/* Correction du centrage et du background */
+html {
+  /* On remplace height: 100% par min-height pour permettre l'extension */
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  
+  /* --- BACKGROUND --- */
+  background-color: var(--bg-color);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.10) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.10) 0px, transparent 50%);
+  
+  /* C'est ICI la correction magique pour le scroll : */
+  background-attachment: fixed; /* Le fond reste fixe quand on scroll */
+  background-size: cover;       /* Couvre toute la zone */
+  
+  color: var(--text-main);
+  
+  /* Flexbox pour centrer le container principal */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  
+  /* S'assure que le body fait au moins la hauteur de l'écran */
+  min-height: 100vh;
+}
+
+/* --- Layout Principal Centré --- */
+.app-container {
+  width: 100%;
+  max-width: 2000px;
   margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  margin-bottom: 3rem;
   text-align: center;
+  width: 100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app-header h1 { 
+  margin: 0 0 0.5rem 0; 
+  font-size: 2.5rem; 
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: 800;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* --- GRILLE 3 COLONNES --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  align-items: start;
+}
+
+/* Responsive Tablette */
+@media (max-width: 1100px) {
+  .main-grid {
+    grid-template-columns: 1fr 1fr;
   }
-  to {
-    transform: rotate(360deg);
+  .history-section {
+    grid-column: span 2;
+    order: 3;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .main-grid {
+    grid-template-columns: 1fr;
   }
+  .history-section { grid-column: span 1; order: 3;}
 }
 
+/* --- Style Générique des Cartes --- */
 .card {
-  padding: 2em;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
 }
 
-.read-the-docs {
-  color: #888;
+/* Barres colorées décoratives */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 6px;
+}
+.history-section::before { background: var(--accent-gradient); }
+.transcript-section::before { background: var(--primary-gradient); }
+.form-section::before { background: var(--secondary-gradient); }
+
+.card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* --- Colonne 1 : Historique --- */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+.history-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.history-item:hover {
+  transform: translateY(-2px);
+  border-color: #94a3b8;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.history-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.history-info {
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.2s;
+  opacity: 0.7;
+}
+
+.delete-btn:hover {
+  background-color: #fee2e2;
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.delete-btn:active {
+  transform: scale(0.95);
+}
+
+.mini-player {
+  width: 100%;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 3rem 0;
+  font-style: italic;
+}
+
+/* --- Colonne 2 : Recorder & Transcript --- */
+.recorder-wrapper {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.transcript-box {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-height: 300px;
+  white-space: pre-wrap;
+  color: #334155;
+  font-family: 'Menlo', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* --- Colonne 3 : Formulaire (MIS À JOUR) --- */
+
+/* C'est ici qu'on gère le scroll */
+.form-wrapper {
+  width: 100%;
+  /* Ces 3 lignes activent le scroll interne : */
+  flex: 1;            /* Prend tout l'espace restant sous le titre h3 */
+  overflow-y: auto;   /* Active le scroll vertical si le contenu dépasse */
+  min-height: 0;      /* Indispensable pour que le scroll fonctionne dans un flex item */
+  
+  /* Un peu d'espace pour que le texte ne colle pas à la scrollbar */
+  padding-right: 8px; 
+  padding-bottom: 10px;
+}
+
+/* On stylise la scrollbar pour qu'elle soit jolie (comme l'historique) */
+.form-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+.form-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.form-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+.form-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+/* Le reste du style des inputs reste le même... */
+.form-wrapper label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.4rem;
+  display: block;
+  margin-top: 1rem;
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pour mettre les dates sur la même ligne */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.project-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Styles des Inputs et Textarea */
+.project-form input,
+.project-form textarea,
+.project-form select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: all 0.2s;
+}
+
+.project-form input:focus, 
+.project-form textarea:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: #6366f1; /* Indigo */
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* --- Styles des Tags (Fonctionnalités) --- */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  min-height: 50px;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.feature-tag {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); /* Dégradé Violet */
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.2s;
+}
+
+.feature-tag:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.no-data {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-left: 0.5rem;
+}
+
+/* --- Composants du Recorder --- */
+.recorder-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.record-btn {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 1rem 3rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.record-btn.idle { 
+  background: var(--success-gradient); 
+}
+.record-btn.idle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+}
+
+.record-btn.recording { 
+  background: var(--danger-gradient); 
+  animation: breathe 2s infinite; 
+}
+
+.visualizer-area {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  opacity: 0; max-height: 0; overflow: hidden;
+  transition: all 0.5s ease;
+}
+.visualizer-area.visible { opacity: 1; max-height: 200px; }
+
+.timer { 
+  font-family: 'Monaco', monospace; 
+  font-size: 2rem; 
+  font-weight: 800; 
+  color: #ef4444; 
+  text-shadow: 0 2px 10px rgba(239, 68, 68, 0.2);
+}
+
+.audio-canvas { 
+  width: 100%; 
+  max-width: 300px;
+  height: 60px; 
+  background: #fff0f0; 
+  border-radius: 10px; 
+  border: 1px solid #fecaca; 
+}
+
+@keyframes breathe {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); transform: scale(1); }
+  50% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); transform: scale(1.05); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); transform: scale(1); }
 }
