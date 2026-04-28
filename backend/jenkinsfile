@@ -1,38 +1,36 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'Node25'
-    }
     stages {
-
-        stage('Install') {
-            steps {
-                dir('backend') {
-                    sh 'npm install'
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {
-					script {
-                        // Get the path to the scanner tool you configured
+                    script {
                         scannerHome = tool 'sonar-scanner'
                     }
-                    // Use the withSonarQubeEnv block to connect to your 'sq1' server
                     withSonarQubeEnv('sq1') {
-                        // Run the scanner using its full path
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
                               -Dsonar.projectKey=formify-backend \
                               -Dsonar.sources=. \
                               -Dsonar.exclusions=node_modules/**
                         """
+                    }                 
+                }
+            }
+        }
+        
+        stage('Build and Push Docker Image') {
+            steps {
+                dir('backend') {
+                    script {
+                        docker.withRegistry('', 'docker-credential') {
+                            def customImage = docker.build("pantherlord/formify-backend:latest")
+                            customImage.push()
+                        }
+                    }
                 }
             }
         }
     }
-}
 }
