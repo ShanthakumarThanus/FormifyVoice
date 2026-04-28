@@ -11,6 +11,7 @@ L'infrastructure repose sur :
 
 ## 2. Architecture matérielle
 
+```
 ┌─────────────────────────────────┐         ┌─────────────────────────────────┐
 │          PC LOCAL               │         │       VM AZURE FRONTEND         │
 │                                 │         │       172.189.59.39             │
@@ -24,6 +25,12 @@ L'infrastructure repose sur :
 │  │  → Deploy              │     │         │                                 │
 │  └────────────────────────┘     │         └─────────────────────────────────┘
 └─────────────────────────────────┘
+```
+
+**Explication du schéma :**
+- À gauche, le PC local qui exécute Jenkins dans un conteneur Docker
+- À droite, la VM Azure qui héberge le frontend avec Nginx
+- La connexion se fait en SSH et les fichiers sont transférés via SCP
 
 
 ## 3. Éléments de l'infrastructure
