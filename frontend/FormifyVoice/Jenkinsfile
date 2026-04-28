@@ -49,12 +49,13 @@ pipeline {
                 dir('frontend/FormifyVoice') {
                     withCredentials([
                         string(credentialsId: 'azure-vm-ip', variable: 'VM_IP'),
-                        string(credentialsId: 'azure-vm-user', variable: 'VM_USER')
+                        string(credentialsId: 'azure-vm-user', variable: 'VM_USER'),
+                        sshUserPrivateKey(credentialsId: 'azure-ssh-key', keyFileVariable: 'SSH_KEY')
                     ]) {
                         sh '''
                             mkdir -p ~/.ssh
                             ssh-keyscan -H ${VM_IP} >> ~/.ssh/known_hosts
-                            scp -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
+                            scp -i ${SSH_KEY} -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
                         '''
                     }
                 }
