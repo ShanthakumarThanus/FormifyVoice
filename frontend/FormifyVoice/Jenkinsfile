@@ -52,6 +52,7 @@ pipeline {
                         string(credentialsId: 'azure-vm-user', variable: 'VM_USER')
                     ]) {
                         sh '''
+                            ssh-keyscan -H ${VM_IP} >> ~/.ssh/known_hosts
                             scp -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
                         '''
                     }
