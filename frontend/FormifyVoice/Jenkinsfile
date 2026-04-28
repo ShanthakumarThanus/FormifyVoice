@@ -22,7 +22,10 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir('frontend/FormifyVoice') {
-                    sh 'npm install'
+                    sh '''
+                        rm -rf node_modules package-lock.json
+                        npm install
+                    '''
                 }
             }
         }
