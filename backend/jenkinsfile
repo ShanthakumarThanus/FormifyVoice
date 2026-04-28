@@ -1,9 +1,39 @@
 pipeline {
     agent any
+
+    tools {
+        nodejs 'Node25'
+    }
+
     stages {
-        stage('Test Docker') {
+        stage('SonarQube Analysis') {
             steps {
-                sh 'docker --version'
+                dir('backend') {
+                    script {
+                        scannerHome = tool 'sonar-scanner'
+                    }
+                    withSonarQubeEnv('sq1') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                              -Dsonar.projectKey=formify-backend \
+                              -Dsonar.sources=. \
+                              -Dsonar.exclusions=node_modules/**
+                        """
+                    }                 
+                }
+            }
+        }
+        
+        stage('Build and Push Docker Image') {
+            steps {
+                dir('backend') {
+                    script {
+                        docker.withRegistry('', 'docker-credential') {
+                            def customImage = docker.build("pantherlord/formify-backend:latest")
+                            customImage.push()
+                        }
+                    }
+                }
             }
         }
     }
