@@ -7,8 +7,8 @@ pipeline {
     
     environment {
         CI = 'true'
-        VM_HOST = ''        // IP publique de la VM Azure
-        VM_USER = ''           // utilisateur SSH azure
+        VM_HOST = ''
+        VM_USER = ''
     }
     
     stages {
@@ -21,36 +21,20 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                dir('frontend/FormifyVoice') {
-                    sh 'npm ci'
-                }
+                sh 'npm ci'
             }
         }
         
         stage('Test') {
             steps {
-                dir('frontend/FormifyVoice') {
-                    sh 'npm test -- --coverage'
-                }
-            }
-            post {
-                always {
-                    junit 'frontend/FormifyVoice/test-results/**/*.xml'
-                    publishHTML(target: [
-                        reportName: 'Couverture Frontend',
-                        reportDir: 'frontend/FormifyVoice/coverage/lcov-report',
-                        reportFiles: 'index.html'
-                    ])
-                }
+                sh 'npm test -- --coverage'
             }
         }
         
         stage('Build') {
             steps {
-                dir('frontend/FormifyVoice') {
-                    sh 'npm run build'
-                    echo '✅ Build terminé'
-                }
+                sh 'npm run build'
+                echo '✅ Build terminé'
             }
         }
         
@@ -60,13 +44,9 @@ pipeline {
             }
             steps {
                 script {
-                    def distPath = 'frontend/FormifyVoice/dist'
-                    
-                    // Transfère les fichiers buildés vers la VM
                     sh """
-                        scp -r ${distPath}/* ${VM_USER}@${VM_HOST}:/var/www/html/
+                        scp -r dist/* ${VM_USER}@${VM_HOST}:/var/www/html/
                     """
-                    
                     echo '🚀 Déployé sur la VM Azure !'
                 }
             }
