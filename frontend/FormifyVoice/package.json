@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-      "test": "jest",
-      "test:coverage": "jest --coverage"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -30,6 +30,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "vite": "^7.2.4"
   }
 }
