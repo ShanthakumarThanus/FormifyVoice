@@ -19,12 +19,7 @@ pipeline {
             steps {
                 dir('backend') {
                     withSonarQubeEnv('sq1') {
-                        sh """
-                            sonar-scanner \
-                              -Dsonar.projectKey=formify-backend \
-                              -Dsonar.sources=. \
-                              -Dsonar.exclusions=node_modules/**
-                        """
+                       sh './mvnw clean org.sonarsource.scanner.maven: sonar-maven-plugin:3.9.0.2155:sonar'
                     }
                 }
             }
