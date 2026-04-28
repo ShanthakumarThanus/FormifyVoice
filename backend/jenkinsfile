@@ -18,14 +18,19 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {
+					script {
+                        // Get the path to the scanner tool you configured
+                        scannerHome = tool 'sonar-scanner'
+                    }
+                    // Use the withSonarQubeEnv block to connect to your 'sq1' server
                     withSonarQubeEnv('sq1') {
+                        // Run the scanner using its full path
                         sh """
-                            sonar-scanner \
+                            ${scannerHome}/bin/sonar-scanner \
                               -Dsonar.projectKey=formify-backend \
                               -Dsonar.sources=. \
                               -Dsonar.exclusions=node_modules/**
                         """
-                    }
                 }
             }
         }
