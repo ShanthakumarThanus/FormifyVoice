@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs 'Node25'
+        sonarScanner 'sonar-scanner'
     }
     stages {
 
