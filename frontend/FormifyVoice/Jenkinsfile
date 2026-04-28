@@ -21,20 +21,25 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm install'
+                }
             }
         }
         
         stage('Test') {
             steps {
-                sh 'npm test -- --coverage'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm test -- --coverage'
+                }
             }
         }
         
         stage('Build') {
             steps {
-                sh 'npm run build'
-                echo '✅ Build terminé'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm run build'
+                }
             }
         }
         
@@ -43,11 +48,12 @@ pipeline {
                 branch 'main'
             }
             steps {
-                script {
-                    sh """
-                        scp -r dist/* ${VM_USER}@${VM_HOST}:/var/www/html/
-                    """
-                    echo '🚀 Déployé sur la VM Azure !'
+                dir('frontend/FormifyVoice') {
+                    script {
+                        sh """
+                            scp -r dist/* ${VM_USER}@${VM_HOST}:/var/www/html/
+                        """
+                    }
                 }
             }
         }
