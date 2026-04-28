@@ -7,8 +7,8 @@ pipeline {
     
     environment {
         CI = 'true'
-        VM_HOST = '172.189.59.39'        // IP publique de la VM Azure
-        VM_USER = 'azureuser'           // utilisateur SSH azure
+        VM_HOST = ''        // IP publique de la VM Azure
+        VM_USER = ''           // utilisateur SSH azure
     }
     
     stages {
