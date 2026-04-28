@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+    
+    tools {
+        nodejs 'NodeJS'
+    }
+    
+    environment {
+        CI = 'true'
+        VM_HOST = ''        // IP publique de la VM Azure
+        VM_USER = ''           // utilisateur SSH azure
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo '✅ Code récupéré'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                dir('frontend/FormifyVoice') {
+                    sh 'npm ci'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir('frontend/FormifyVoice') {
+                    sh 'npm test -- --coverage'
+                }
+            }
+            post {
+                always {
+                    junit 'frontend/FormifyVoice/test-results/**/*.xml'
+                    publishHTML(target: [
+                        reportName: 'Couverture Frontend',
+                        reportDir: 'frontend/FormifyVoice/coverage/lcov-report',
+                        reportFiles: 'index.html'
+                    ])
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir('frontend/FormifyVoice') {
+                    sh 'npm run build'
+                    echo '✅ Build terminé'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    def distPath = 'frontend/FormifyVoice/dist'
+                    
+                    // Transfère les fichiers buildés vers la VM
+                    sh """
+                        scp -r ${distPath}/* ${VM_USER}@${VM_HOST}:/var/www/html/
+                    """
+                    
+                    echo '🚀 Déployé sur la VM Azure !'
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo '🎉 Pipeline frontend terminé !'
+        }
+        failure {
+            echo '❌ Pipeline échoué'
+        }
+    }
+}
