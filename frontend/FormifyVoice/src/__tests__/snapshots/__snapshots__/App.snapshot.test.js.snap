@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Tests de Snapshot - App le composant App correspond au snapshot 1`] = `
+<div>
+  <div
+    class="app-container"
+  >
+    <header
+      class="app-header"
+    >
+      <h1>
+        🎙️ Assistant de Projet IA
+      </h1>
+      <p
+        class="subtitle"
+      >
+        Dictez votre projet, l'IA s'occupe du reste.
+      </p>
+    </header>
+    <main
+      class="main-grid"
+    >
+      <section
+        class="card history-section"
+      >
+        <h3>
+          📁 Enregistrements (
+          0
+          )
+        </h3>
+        <div
+          class="history-list"
+        >
+          <p
+            class="empty-state"
+          >
+            Aucun enregistrement.
+          </p>
+        </div>
+      </section>
+      <section
+        class="card transcript-section"
+      >
+        <div
+          class="recorder-wrapper"
+        >
+          <div
+            class="recorder-container"
+          >
+            <button
+              class="record-btn idle"
+            >
+              🎙 Record
+            </button>
+            <div
+              class="visualizer-area "
+            >
+              <div
+                class="timer"
+              >
+                00:00
+              </div>
+              <canvas
+                class="audio-canvas"
+                height="60"
+                width="300"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="transcript-box"
+        >
+          <span
+            class="placeholder"
+          >
+            La transcription apparaîtra ici...
+          </span>
+        </div>
+      </section>
+      <section
+        class="card form-section"
+      >
+        <h3>
+          Données Extraites
+        </h3>
+        <div
+          class="form-wrapper"
+        >
+          <form
+            class="project-form"
+          >
+            <div
+              class="form-group"
+            >
+              <label>
+                Titre du projet
+              </label>
+              <input
+                placeholder="Nom du projet..."
+                readonly=""
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              class="form-group"
+            >
+              <label>
+                Description
+              </label>
+              <textarea
+                placeholder="Description du projet..."
+                readonly=""
+                rows="4"
+              />
+            </div>
+            <div
+              class="form-group"
+            >
+              <label>
+                Budget (€)
+              </label>
+              <input
+                placeholder="0"
+                readonly=""
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              class="form-row"
+            >
+              <div
+                class="form-group"
+              >
+                <label>
+                  Date de début
+                </label>
+                <input
+                  readonly=""
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                class="form-group"
+              >
+                <label>
+                  Date de fin
+                </label>
+                <input
+                  readonly=""
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+`;
