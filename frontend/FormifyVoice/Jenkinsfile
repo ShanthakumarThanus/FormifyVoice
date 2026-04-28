@@ -47,11 +47,12 @@ pipeline {
         }
         
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
                 dir('frontend/FormifyVoice') {
+                    withCredentials([
+                        string(credentialsId: 'azure-vm-ip', variable: 'VM_IP'),
+                        string(credentialsId: 'azure-vm-user', variable: 'VM_USER')
+                    ])
                     script {
                         sh """
                             scp -r dist/* ${VM_USER}@${VM_HOST}:/var/www/html/
