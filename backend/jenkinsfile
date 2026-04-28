@@ -17,7 +17,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {
-                    withSonarQubeEnv('sonarqube') {
+                    withSonarQubeEnv('sq1') {
                         sh """
                             sonar-scanner \
                               -Dsonar.projectKey=formify-backend \
