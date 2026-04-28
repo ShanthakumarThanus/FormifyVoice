@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    
+    tools {
+        nodejs 'NodeJS'
+    }
+    
+    environment {
+        CI = 'true'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo '✅ Code récupéré'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'npm test -- --coverage'
+            }
+            post {
+                always {
+                    junit 'test-results/**/*.xml'
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'azure-vm-ip', variable: 'VM_IP'),
+                        string(credentialsId: 'azure-vm-user', variable: 'VM_USER')
+                    ]) {
+                        sh '''
+                            scp -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo '🎉 Pipeline frontend terminé !'
+        }
+        failure {
+            echo '❌ Pipeline échoué'
+        }
+    }
+}
