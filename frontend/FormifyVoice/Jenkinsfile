@@ -7,6 +7,8 @@ pipeline {
     
     environment {
         CI = 'true'
+        VM_HOST = ''        // IP publique de la VM Azure
+        VM_USER = ''           // utilisateur SSH azure
     }
     
     stages {
@@ -19,24 +21,36 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm ci'
+                }
             }
         }
         
         stage('Test') {
             steps {
-                sh 'npm test -- --coverage'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm test -- --coverage'
+                }
             }
             post {
                 always {
-                    junit 'test-results/**/*.xml'
+                    junit 'frontend/FormifyVoice/test-results/**/*.xml'
+                    publishHTML(target: [
+                        reportName: 'Couverture Frontend',
+                        reportDir: 'frontend/FormifyVoice/coverage/lcov-report',
+                        reportFiles: 'index.html'
+                    ])
                 }
             }
         }
         
         stage('Build') {
             steps {
-                sh 'npm run build'
+                dir('frontend/FormifyVoice') {
+                    sh 'npm run build'
+                    echo '✅ Build terminé'
+                }
             }
         }
         
@@ -46,14 +60,14 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([
-                        string(credentialsId: 'azure-vm-ip', variable: 'VM_IP'),
-                        string(credentialsId: 'azure-vm-user', variable: 'VM_USER')
-                    ]) {
-                        sh '''
-                            scp -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
-                        '''
-                    }
+                    def distPath = 'frontend/FormifyVoice/dist'
+                    
+                    // Transfère les fichiers buildés vers la VM
+                    sh """
+                        scp -r ${distPath}/* ${VM_USER}@${VM_HOST}:/var/www/html/
+                    """
+                    
+                    echo '🚀 Déployé sur la VM Azure !'
                 }
             }
         }
