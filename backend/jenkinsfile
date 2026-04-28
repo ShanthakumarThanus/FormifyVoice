@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs 'Node25'
-        sonarRunner 'sonar-scanner'
+        sonarQube 'sonar-scanner'
     }
     stages {
 
@@ -24,7 +24,7 @@ pipeline {
                               -Dsonar.projectKey=formify-backend \
                               -Dsonar.sources=. \
                               -Dsonar.exclusions=node_modules/**
-                        """sh './mvnw clean org.sonarsource.scanner.maven: sonar-maven-plugin:3.9.0.2155:sonar'
+                        """
                     }
                 }
             }
