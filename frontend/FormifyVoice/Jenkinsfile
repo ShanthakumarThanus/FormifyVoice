@@ -55,6 +55,7 @@ pipeline {
                         sh '''
                             mkdir -p ~/.ssh
                             ssh-keyscan -H ${VM_IP} >> ~/.ssh/known_hosts
+                            ssh -i ${SSH_KEY} ${VM_USER}@${VM_IP} "sudo mkdir -p /var/www/html && sudo chown -R ${VM_USER}:${VM_USER} /var/www/html"
                             scp -i ${SSH_KEY} -r dist/* ${VM_USER}@${VM_IP}:/var/www/html/
                         '''
                     }
