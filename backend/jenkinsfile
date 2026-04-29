@@ -18,12 +18,9 @@ pipeline {
                         scannerHome = tool 'sonar-scanner'
                     }
                     withSonarQubeEnv('sq1') {
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                              -Dsonar.projectKey=formify-backend \
-                              -Dsonar.sources=. \
-                              -Dsonar.exclusions=node_modules/**
-                        """
+                         sh """
+                                ${scannerHome}/bin/sonar-scanner
+                            """
                     }                 
                 }
             }
